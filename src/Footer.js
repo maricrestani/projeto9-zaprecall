@@ -1,23 +1,39 @@
 import React from 'react'
 import styled from 'styled-components'
+//import CardList from './CardList'
 //import { useState } from "react"
 
-export default function Footer({cardList, setCardList}) {
+export default function Footer({cardList}) {
   
-  const answered = cardList.filter((e) => e.color !== "#333333")
+  function closeCards() {
+    cardList.forEach((e) => {
+      e.clicked = false;
+    })}
 
-    return (
-        <FooterDiv>
-            <Container>
-                <button className="error" onClick="">Não lembrei</button>
-                <button className="almost" onClick="">Quase não lembrei</button>
-                <button className="correct" onClick="">Zap!</button>
-            </Container>
-            <span>
-         {answered.length}/{cardList.length} Concluídos
-        </span>
-        </FooterDiv>
-    )
+ const answered = cardList.filter((e) => e.color !== "#333333")
+  console.log('cardlist no footer',cardList)
+
+function answerCard(){
+  alert('scorro deus')
+}
+
+function error(color){
+  alert('error')
+  console.log(color)
+}
+
+  return (
+    <FooterDiv>
+      <Container>
+        <button className="error" color={'#FF3030'} onClick={error}>Não lembrei</button>
+        <button className="almost" onClick={closeCards}>Quase não lembrei</button>
+        <button className="correct" onClick={answerCard}>Zap!</button>
+      </Container>
+      <span>
+        {answered.length}/{cardList.length} Concluídos
+      </span>
+    </FooterDiv>
+  )
 }
 
 const FooterDiv = styled.div`
@@ -61,7 +77,7 @@ button {
   cursor: pointer;
 
     &.error {
-    background-color: #FF3030;
+      background-color: #FF3030;
     border: #FF3030;
     }
     &.almost {

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import GlobalStyle from './Globalstyle'
 import { useState } from "react"
 import CardList from './CardList'
-import Footer from './Footer'
+//import Footer from './Footer'
 
 import Deck from './Deck'
 
@@ -22,9 +22,7 @@ export default function App() {
                 <h1>ZappRecall</h1>
             </Logo>
             <CardList cardList={cardList} setCardList={setCardList}></CardList>
-
-            <Footer cardList={cardList} setCardList={setCardList} />
-
+            
         </Container>
     )
 

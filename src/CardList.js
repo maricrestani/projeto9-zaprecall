@@ -7,6 +7,7 @@ export default function CardList({cardList, setCardList}) {
        <>
         {cardList.map((card, i) => (
             <Card
+            card={card}
                 key={i}
                 index={i}
                 id={card.id}
