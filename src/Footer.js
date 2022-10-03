@@ -1,14 +1,21 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
+//import { useState } from "react"
 
-export default function Footer() {
+export default function Footer({cardList, setCardList}) {
+  
+  const answered = cardList.filter((e) => e.color !== "#333333")
+
     return (
         <FooterDiv>
             <Container>
-                <button onClick="">Não lembrei</button>
-                <button onClick="">Quase não lembrei</button>
-                <button onClick="">Zap!</button>
+                <button className="error" onClick="">Não lembrei</button>
+                <button className="almost" onClick="">Quase não lembrei</button>
+                <button className="correct" onClick="">Zap!</button>
             </Container>
+            <span>
+         {answered.length}/{cardList.length} Concluídos
+        </span>
         </FooterDiv>
     )
 }
@@ -51,5 +58,20 @@ button {
   border-radius: 5px;
   border: 1px solid blue;
   padding:5px;
+  cursor: pointer;
+
+    &.error {
+    background-color: #FF3030;
+    border: #FF3030;
+    }
+    &.almost {
+    background-color: #FF922E;
+    border: #FF922E;
+    }
+    &.correct {
+    background-color: #2FBE34;
+    border: #2FBE34;
+    }
+
 }
 `

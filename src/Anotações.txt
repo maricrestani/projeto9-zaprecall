@@ -1,0 +1,15 @@
+CORES:
+    verde = "#2FBE34",
+    amarelo = "#FF922E",
+    vermelho = "#FF3030",
+    cinza = "#333333"
+
+//import party from "./img/party.png"
+//import sad from "./img/sad.png"
+
+//<img src={iconeCerto} alt="" />
+//<img src={iconeErro} alt="" />
+//<img src={iconeQuase} alt="" />
+//<img src={party} alt="" />
+//<img src={sad} alt="" />
+//<img src={setaVirar} alt="" />

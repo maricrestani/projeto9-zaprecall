@@ -1,40 +1,30 @@
-import React from 'react';
-import styled from 'styled-components';
-import GlobalStyle from './Globalstyle';
-import Question from './Question';
-import Footer from './Footer';
+import React from 'react'
+import styled from 'styled-components'
+import GlobalStyle from './Globalstyle'
+import { useState } from "react"
+import CardList from './CardList'
+import Footer from './Footer'
 
-//import iconeCerto from "./img/icone_certo.png"
-//import iconeErro from "./img/icone_erro.png"
-//import iconeQuase from "./img/icone_quase.png"
+import Deck from './Deck'
+
 import logo from "./img/logo.png"
-//import party from "./img/party.png"
-//import sad from "./img/sad.png"
-//import setaVirar from "./img/seta_virar.png"
 
-
-//<img src={iconeCerto} alt="" />
-//<img src={iconeErro} alt="" />
-//<img src={iconeQuase} alt="" />
-//<img src={party} alt="" />
-//<img src={sad} alt="" />
-//<img src={setaVirar} alt="" />
 
 export default function App() {
 
-    return (
+    const [cardList, setCardList] = useState([...Deck]);
 
+    return (
         <Container>
             <GlobalStyle />
             <Logo>
                 <LogoImg src={logo} alt="" />
                 <h1>ZappRecall</h1>
             </Logo>
-            <Question></Question>
-            <Question></Question>
-            <Question></Question>
-            <Question></Question>
-            <Footer />
+            <CardList cardList={cardList} setCardList={setCardList}></CardList>
+
+            <Footer cardList={cardList} setCardList={setCardList} />
+
         </Container>
     )
 

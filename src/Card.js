@@ -1,23 +1,29 @@
-import React from 'react';
-import styled from 'styled-components';
-//import Decks from './Decks';
+import React from 'react'
+import styled from 'styled-components'
+//import { useState } from "react"
 
 import setaPlay from "./img/seta_play.png"
+//import setaVirar from "./img/seta_virar.png"
+//import iconeCerto from "./img/icone_certo.png"
+//import iconeErro from "./img/icone_erro.png"
+//import iconeQuase from "./img/icone_quase.png"
 
 function Click(){
-alert("card foi clicado")
 }
 
-export default function Question() {
+export default function Card({index,id,question,answer,clicked,closed,turned,cardList,setCardList})
+{
+
     return (
+        <>
         <QuestionDiv>
-            <p>Pergunta 1</p>
+            <p>Pergunta {id}</p>
             <img onClick={Click} src={setaPlay} alt="" />
         </QuestionDiv>
+        </>
     )
 }
 
-//Decks.map(`{Pergunta ${id}}`)
 
 const QuestionDiv = styled.div`
 width: 300px;
