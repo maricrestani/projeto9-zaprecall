@@ -13,8 +13,8 @@ export default function CardList({cardList, setCardList}) {
                 question={card.question}
                 answer={card.answer}
                 clicked={card.clicked}
-                closed={card.closed}
                 turned={card.turned}
+                closed={card.closed}
                 cardList={cardList}
                 setCardList={setCardList}
             />

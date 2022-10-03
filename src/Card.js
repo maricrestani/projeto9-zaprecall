@@ -3,29 +3,49 @@ import styled from 'styled-components'
 //import { useState } from "react"
 
 import setaPlay from "./img/seta_play.png"
-//import setaVirar from "./img/seta_virar.png"
-//import iconeCerto from "./img/icone_certo.png"
-//import iconeErro from "./img/icone_erro.png"
-//import iconeQuase from "./img/icone_quase.png"
+import setaTurn from "./img/seta_virar.png"
+//import iconCorrect from "./img/icone_certo.png"
+//import iconError from "./img/icone_erro.png"
+//import iconAlmost from "./img/icone_quase.png"
 
-function Click(){
+
+export default function Card({ index, id, question, answer, clicked, turned, closed, cardList, setCardList }) {
+    let newCardList = [...cardList]
+
+    function openCard() {
+        //alert("card clicado!")
+        newCardList[index].clicked = true
+        setCardList(newCardList)        
+    }
+
+    function turnCard() {
+        //alert('seta virar clicada')
+        newCardList[index].turned = true
+        setCardList(newCardList)
+        console.log("newcardlist", newCardList)
+      }
+
+
+    if (!clicked) {
+        return (
+
+            <QuestionClosed>
+                <p>Pergunta {id}</p>
+                <img onClick={openCard} clicked={clicked} src={setaPlay} alt="" />
+            </QuestionClosed>
+        )
+    } else {
+        return (
+            <QuestionOpen >
+                <p>{turned ? answer : question}</p>
+                <img onClick={turnCard} turned={turned} src={turned ? '' : setaTurn} alt="" />
+            </QuestionOpen >
+        )
+    }
 }
 
-export default function Card({index,id,question,answer,clicked,closed,turned,cardList,setCardList})
-{
 
-    return (
-        <>
-        <QuestionDiv>
-            <p>Pergunta {id}</p>
-            <img onClick={Click} src={setaPlay} alt="" />
-        </QuestionDiv>
-        </>
-    )
-}
-
-
-const QuestionDiv = styled.div`
+const QuestionClosed = styled.div`
 width: 300px;
     height: 35px;
     background-color: #FFFFFF;
@@ -50,8 +70,8 @@ width: 300px;
     cursor: pointer;
     }
 `
-/*
-const AnswerDiv = styled.div`
+
+const QuestionOpen = styled.div`
     width: 300px;
     margin: 12px;
     padding: 15px;
@@ -70,10 +90,12 @@ const AnswerDiv = styled.div`
     flex-direction: column;
     justify-content: space-between;   
 
-    p{
-        position: absolute;
+
+    img{
+    position: absolute;
+    width: 30px;
     bottom: 10px;
     right: 10px;
+    cursor: pointer;
     }
 `
-*/
