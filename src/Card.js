@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-//import { useState } from "react"
+import { useState } from "react"
 
 import setaPlay from "./img/seta_play.png"
 import setaTurn from "./img/seta_virar.png"
@@ -8,12 +8,14 @@ import iconCorrect from "./img/icone_certo.png"
 import iconError from "./img/icone_erro.png"
 import iconAlmost from "./img/icone_quase.png"
 
-export default function Card({ index, id, question, answer, clicked, turned, closed, icon, color, cardList, setCardList }) {
+export default function Card({ index, id, question, answer, clicked, turned, closed, cardList, setCardList }) {
     let newCardList = [...cardList]
 
-    const red = "#FF3030";
-    const orange = "#FF922E";
-    const green = "#2FBE34";
+    const red = "#FF3030"
+    const green = "#2FBE34"
+    const orange = "#FF922E"
+
+    let [newColor, setNewColor] = useState('')
 
     const answered = cardList.filter((e) => e.color !== '#333333')
 
@@ -28,60 +30,58 @@ export default function Card({ index, id, question, answer, clicked, turned, clo
     }
 
     function error(color) {
-        alert('error')
-
         let openCard = 0
         newCardList.forEach((card, index) => card.turned === true ? openCard = index : '')
-        console.log('index', openCard)
 
         newCardList[openCard].color = color
-        console.log('aushuashuas',newCardList[openCard].color)
-        //newCardList[openCard].icon = icon
+        color = (color.toString())
+        setNewColor(color)
 
         newCardList[openCard].closed = true
         setCardList(newCardList)
-        console.log('dentro do error', newCardList)
-        changeIcon(color) 
     }
 
 
-    function almost() {
-        alert('almost')
+    function almost(color) {
+        let openCard = 0
+        newCardList.forEach((card, index) => card.turned === true ? openCard = index : '')
+
+        newCardList[openCard].color = color
+        color = (color.toString())
+        setNewColor(color)
+
+        newCardList[openCard].closed = true
+        setCardList(newCardList)
     }
 
-    function correct() {
-        alert('correct')
+    function correct(color) {
+
+        let openCard = 0
+        newCardList.forEach((card, index) => card.turned === true ? openCard = index : '')
+
+        newCardList[openCard].color = color
+        color = (color.toString())
+        setNewColor(color)
+
+        newCardList[openCard].closed = true
+        setCardList(newCardList)
     }
 
-    function changeIcon(color) {
-        console.log(color)
-
-        if (color === '#FF3030'){
-            return iconError
-        } else if (color === "#FF922E") {
-            return iconAlmost
-        } else if (color === "#2FBE34") {
-            return iconCorrect;
-        }
-    }
-
-    /* function closeCards() {
-         newCardList.forEach((e) => { e.clicked = false })
-     }*/
-
+    console.log('só newColor fora!! ', newColor)
+    console.log(typeof (newColor))
 
     if (!clicked && !closed) {
         return (
             <>
-                <QuestionClosed>
+                <QuestionClosed data-identifier="flashcard">
                     <p>Pergunta {id}</p>
-                    <img onClick={openCard} closed={closed} clicked={clicked} turned={turned} src={setaPlay} alt="" />
+                    <img data-identifier="flashcard-show-btn" onClick={openCard} closed={closed} clicked={clicked} turned={turned} src={setaPlay} alt="" />
                 </QuestionClosed>
                 <FooterDiv>
                     <Container>
                         <button className="error" onClick={() => error(red)} >Não lembrei</button>
-                        <button className="almost" onClick={almost}>Quase não lembrei</button>
-                        <button className="correct" onClick={correct}>Zap!</button>
+                        <button className="almost" onClick={() => almost(orange)}>Quase não lembrei</button>
+                        <button className="correct" onClick={() => correct(green)}>Zap!</button>
                     </Container>
                     <span>
                         {answered.length}/{cardList.length} Concluídos
@@ -92,17 +92,17 @@ export default function Card({ index, id, question, answer, clicked, turned, clo
     } else if (clicked && !closed) {
         return (
             <>
-                <QuestionOpen >
+                <QuestionOpen data-identifier="flashcard-index-item">
                     <p>{turned ? answer : question}</p>
-                    <img onClick={turnCard} closed={closed} clicked={clicked} turned={turned} src={turned ? '' : setaTurn} alt="" />
+                    <img data-identifier="flashcard-turn-btn" onClick={turnCard} closed={closed} clicked={clicked} turned={turned} src={turned ? '' : setaTurn} alt="" />
                 </QuestionOpen >
                 <FooterDiv>
                     <Container>
-                        <button className="error" onClick={() => error(red)}>Não lembrei</button>
-                        <button className="almost" onClick={almost}>Quase não lembrei</button>
-                        <button className="correct" onClick={correct}>Zap!</button>
+                        <button data-identifier="forgot-btn" className="error" onClick={() => error(red)}>Não lembrei</button>
+                        <button data-identifier="almost-forgot-btn" className="almost" onClick={() => almost(orange)} >Quase não lembrei</button>
+                        <button data-identifier="zap-btn" className="correct" onClick={() => correct(green)} >Zap!</button>
                     </Container>
-                    <span>
+                    <span data-identifier="flashcard-counter">
                         {answered.length}/{cardList.length} Concluídos
                     </span>
                 </FooterDiv>
@@ -112,15 +112,15 @@ export default function Card({ index, id, question, answer, clicked, turned, clo
     else if (closed) {
         return (
             <>
-                <QuestionClosed className='error'>
+                <QuestionClosed className={newColor === '#FF3030' ? 'error' : (newColor === '#FF922E' ? 'almost' : 'correct')}  >
                     <p>Pergunta {id}</p>
-                    <img onClick={openCard} clicked={clicked} closed={closed} turned={turned} color={color} src={''} alt="" />
+                    <img data-identifier="flashcard-status" onClick={openCard} clicked={clicked} closed={closed} turned={turned} src={newColor === "#FF3030" ? iconError : (newColor === "#FF922E" ? iconAlmost : iconCorrect)} alt="" />
                 </QuestionClosed>
                 <FooterDiv>
                     <Container>
-                        <button className={iconError}  color={red} onClick={() => error(color)} >Não lembrei</button>
-                        <button className="almost" onClick={almost}>Quase não lembrei</button>
-                        <button className="correct" onClick={correct}>Zap!</button>
+                        <button className="error" onClick={() => error(red)}>Não lembrei</button>
+                        <button className="almost" onClick={() => almost(orange)}>Quase não lembrei</button>
+                        <button className="correct" onClick={() => correct(green)}>Zap!</button>
                     </Container>
                     <span>
                         {answered.length}/{cardList.length} Concluídos
