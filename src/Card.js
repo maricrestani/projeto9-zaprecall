@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useState } from "react"
+//import { useState } from "react"
 
 import setaPlay from "./img/seta_play.png"
 import setaTurn from "./img/seta_virar.png"
@@ -8,14 +8,56 @@ import iconCorrect from "./img/icone_certo.png"
 import iconError from "./img/icone_erro.png"
 import iconAlmost from "./img/icone_quase.png"
 
-export default function Card({ index, id, question, answer, clicked, turned, closed, cardList, setCardList }) {
+let classNameClosedGlobal = "";
+
+function doNothing(){
+    return;
+}
+
+function Footer(props) {
+
+    return(
+    <FooterDiv>
+        <Container>
+            <button className="error" onClick={() => error(props.index,props.classNameClosed,"red", "error", 1,props.newCardList,props.card,props.setCardList,props.setClassNameClosed,props.changeIcon)} >Não lembrei</button>
+            <button className="almost" onClick={() => error(props.index,props.classNameClosed,"#F922E", "almost", 1,props.newCardList,props.card,props.setCardList,props.setClassNameClosed,props.changeIcon)}>Quase não lembrei</button>
+            <button className="correct" onClick={() => error(props.index,props.classNameClosed,"#2FBE34", "correct", 1,props.newCardList,props.card,props.setCardList,props.setClassNameClosed,props.changeIcon)}>Zap!</button>
+        </Container>
+        <span> 
+            {props.answered.length}/{props.cardList.length} Concluídos
+        </span>
+    </FooterDiv>
+    )
+}
+
+
+function error(id,classNameClosed,color, classButton, parte,newCardList,card,setCardList,setClassNameClosed,changeIcon) {
+
+    classNameClosedGlobal = classButton;
+
+    let openCard = 0
+    newCardList.forEach((card, index) => card.turned === true ? openCard = index : '')
+    console.log('index', openCard)
+    console.log(id);
+    
+
+    newCardList[openCard].color = color
+    newCardList[openCard].icon = classButton;
+    console.log("aqui",newCardList[openCard].icon);
+    
+    newCardList[openCard].closed = true;
+    setCardList(newCardList)
+    changeIcon(color)
+    setClassNameClosed(classNameClosedGlobal);
+}
+
+export default function Card({ card, index, id, question, answer, clicked, turned, closed, icon, color, cardList, setCardList }) {
     let newCardList = [...cardList]
+    let [classNameClosed, setClassNameClosed] = React.useState("");
 
-    const red = "#FF3030"
-    const green = "#2FBE34"
-    const orange = "#FF922E"
-
-    let [newColor, setNewColor] = useState('')
+    const red = "#FF3030";
+    const orange = "#FF922E";
+    const green = "#2FBE34";
 
     const answered = cardList.filter((e) => e.color !== '#333333')
 
@@ -23,115 +65,87 @@ export default function Card({ index, id, question, answer, clicked, turned, clo
         newCardList[index].clicked = true
         setCardList(newCardList)
     }
+    
+    function indiceOpenCard(){
+        console.log("entra indiceOpenCard");
+        for(let i= 0; i<newCardList.length; i++){
+            if(newCardList[i].closed == true){
+                console.log("entra");
+                console.log(i);
+                return i;
+            }else{
+                return null;
+            }
+        }
+    }
 
     function turnCard() {
         newCardList[index].turned = true
         setCardList(newCardList)
     }
 
-    function error(color) {
-        let openCard = 0
-        newCardList.forEach((card, index) => card.turned === true ? openCard = index : '')
 
-        newCardList[openCard].color = color
-        color = (color.toString())
-        setNewColor(color)
 
-        newCardList[openCard].closed = true
-        setCardList(newCardList)
+    function almost() {
+        alert('almost')
     }
 
-
-    function almost(color) {
-        let openCard = 0
-        newCardList.forEach((card, index) => card.turned === true ? openCard = index : '')
-
-        newCardList[openCard].color = color
-        color = (color.toString())
-        setNewColor(color)
-
-        newCardList[openCard].closed = true
-        setCardList(newCardList)
+    function correct() {
+        alert('correct')
     }
 
-    function correct(color) {
+    function changeIcon(color) {
+        console.log(color)
 
-        let openCard = 0
-        newCardList.forEach((card, index) => card.turned === true ? openCard = index : '')
-
-        newCardList[openCard].color = color
-        color = (color.toString())
-        setNewColor(color)
-
-        newCardList[openCard].closed = true
-        setCardList(newCardList)
+        if (color === '#FF3030') {
+            return iconError
+        } else if (color === "#FF922E") {
+            return iconAlmost
+        } else if (color === "#2FBE34") {
+            return iconCorrect;
+        }
     }
 
-    console.log('só newColor fora!! ', newColor)
-    console.log(typeof (newColor))
 
     if (!clicked && !closed) {
         return (
             <>
-                <QuestionClosed data-identifier="flashcard">
-                    <p>Pergunta {id}</p>
-                    <img data-identifier="flashcard-show-btn" onClick={openCard} closed={closed} clicked={clicked} turned={turned} src={setaPlay} alt="" />
+                <QuestionClosed>
+                    <p>Perguntinha {id}</p>
+                    <img onClick={openCard} closed={closed} clicked={clicked} turned={turned} src={setaPlay} alt="" />
                 </QuestionClosed>
-                <FooterDiv>
-                    <Container>
-                        <button className="error" onClick={() => error(red)} >Não lembrei</button>
-                        <button className="almost" onClick={() => almost(orange)}>Quase não lembrei</button>
-                        <button className="correct" onClick={() => correct(green)}>Zap!</button>
-                    </Container>
-                    <span>
-                        {answered.length}/{cardList.length} Concluídos
-                    </span>
-                </FooterDiv>
+                <Footer id = {index} classNameClosed={classNameClosed} changeIcon ={changeIcon} answered={answered} cardList={cardList} newCardList={newCardList} card={card} setCardList={setCardList} setClassNameClosed={setClassNameClosed}></Footer>
             </>
         )
     } else if (clicked && !closed) {
         return (
             <>
-                <QuestionOpen data-identifier="flashcard-index-item">
+                <QuestionOpen >
                     <p>{turned ? answer : question}</p>
-                    <img data-identifier="flashcard-turn-btn" onClick={turnCard} closed={closed} clicked={clicked} turned={turned} src={turned ? '' : setaTurn} alt="" />
+                    <img onClick={turnCard} closed={closed} clicked={clicked} turned={turned} src={turned ? '' : setaTurn} alt="" />
                 </QuestionOpen >
-                <FooterDiv>
-                    <Container>
-                        <button data-identifier="forgot-btn" className="error" onClick={() => error(red)}>Não lembrei</button>
-                        <button data-identifier="almost-forgot-btn" className="almost" onClick={() => almost(orange)} >Quase não lembrei</button>
-                        <button data-identifier="zap-btn" className="correct" onClick={() => correct(green)} >Zap!</button>
-                    </Container>
-                    <span data-identifier="flashcard-counter">
-                        {answered.length}/{cardList.length} Concluídos
-                    </span>
-                </FooterDiv>
+                <Footer changeIcon ={changeIcon} answered={answered} cardList={cardList} newCardList={newCardList} card={card} setCardList={setCardList} setClassNameClosed={setClassNameClosed}></Footer>
             </>
         )
     }
-    else if (closed) {
+    else if(closed && classNameClosed==""){
+      
         return (
             <>
-                <QuestionClosed className={newColor === '#FF3030' ? 'error' : (newColor === '#FF922E' ? 'almost' : 'correct')}  >
+                <QuestionClosedColored className={indiceOpenCard() !== null && newCardList[indiceOpenCard()].icon != ""? newCardList[index].icon:doNothing()}>
                     <p>Pergunta {id}</p>
-                    <img data-identifier="flashcard-status" onClick={openCard} clicked={clicked} closed={closed} turned={turned} src={newColor === "#FF3030" ? iconError : (newColor === "#FF922E" ? iconAlmost : iconCorrect)} alt="" />
-                </QuestionClosed>
-                <FooterDiv>
-                    <Container>
-                        <button className="error" onClick={() => error(red)}>Não lembrei</button>
-                        <button className="almost" onClick={() => almost(orange)}>Quase não lembrei</button>
-                        <button className="correct" onClick={() => correct(green)}>Zap!</button>
-                    </Container>
-                    <span>
-                        {answered.length}/{cardList.length} Concluídos
-                    </span>
-                </FooterDiv>
+                    <img onClick={openCard} clicked={clicked} closed={closed} turned={turned} color={color} src={''} alt="" />
+                </QuestionClosedColored>
+                <Footer changeIcon ={changeIcon} answered={answered} cardList={cardList} newCardList={newCardList} card={card} setCardList={setCardList} setClassNameClosed={setClassNameClosed}></Footer>
             </>
         )
     }
+
+
 }
 
-const QuestionClosed = styled.div`
+
+const QuestionClosedColored = styled.div`
 width: 300px;
     height: 35px;
     background-color: #FFFFFF;
@@ -159,7 +173,7 @@ width: 300px;
     &.error {
         p{color: #FF3030;}
         color: #FF3030;
-      text-decoration: line-through;
+        text-decoration: line-through;
     }
     &.almost {
         p{color: #FF922E;}
@@ -173,6 +187,32 @@ width: 300px;
     text-decoration: line-through;
     }
 
+`
+
+const QuestionClosed = styled.div`
+width: 300px;
+    height: 35px;
+    background-color: #FFFFFF;
+    margin: 12px;
+    padding: 15px;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    p{
+        font-family: 'Recursive';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    color: #333333;
+    }
+
+    img{
+    cursor: pointer;
+    }
 
 `
 
